@@ -1,8 +1,8 @@
-# liri-code
+# 🚀 liri-code
 
-A minimal CLI launcher for [Claude Code](https://github.com/anthropics/claude-code) with interactive model selection via an [Antigravity](https://github.com/anthropics/antigravity) proxy.
+A minimal, lightning-fast CLI launcher for [Claude Code](https://github.com/anthropics/claude-code) with interactive model selection via an [Antigravity](https://github.com/anthropics/antigravity) proxy.
 
-```
+```text
 ┌    liri  
 │
 ◇  Proxy is running
@@ -21,81 +21,54 @@ A minimal CLI launcher for [Claude Code](https://github.com/anthropics/claude-co
 
 ---
 
-## How it works
+## ⚡ How it works
 
-1. Checks if the Antigravity proxy is running — **starts it automatically** if not
-2. Fetches available models from `http://localhost:8080/v1/models`
-3. Shows an interactive picker — arrow keys to navigate, Enter to select
-4. Writes `~/.claude/settings.json` with the selected model
-5. Launches Claude Code immediately
+1. 🔄 Checks if the Antigravity proxy is running — **starts it automatically** if not
+2. 📡 Fetches available models from `http://localhost:8080/v1/models`
+3. 🎯 Shows an interactive picker — arrow keys to navigate, Enter to select
+4. ⚙️ Writes `~/.claude/settings.json` with the selected model
+5. 🚀 Launches Claude Code immediately
 
 ---
 
-## Requirements
+## 📋 Requirements
 
-Before installing liri, make sure these are installed on your system:
+Before installing `liri`, make sure these are installed on your system:
 
 | Requirement | Version | Purpose |
 |---|---|---|
-| [Node.js](https://nodejs.org) | ≥ 18 | Runtime |
-| [Claude Code](https://github.com/anthropics/claude-code) | latest | The editor liri launches |
-| [Antigravity CLI](https://github.com/anthropics/antigravity) (`acc`) | latest | Proxy that serves available models |
+| 🟢 [Node.js](https://nodejs.org) | ≥ 18 | JavaScript runtime |
+| 🤖 [Claude Code](https://github.com/anthropics/claude-code) | latest | The CLI tool `liri` launches |
+| ⚡ [Antigravity CLI](https://github.com/anthropics/antigravity) (`acc`) | latest | Proxy that serves available models |
 
 ---
 
-## Installation
+## 📦 Installation
 
-### macOS
+### 🍎 / 🐧 macOS & Linux
 
 #### Step 1 — Install Node.js
-
-The recommended way is via [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager):
+Using [nvm](https://github.com/nvm-sh/nvm) (recommended):
 
 ```bash
-# Install nvm
+# Install nvm & Node.js 22 (LTS)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-
-# Reload your shell
-source ~/.zshrc   # or ~/.bashrc if using bash
-
-# Install Node.js 22 (LTS)
-nvm install 22
-nvm use 22
-nvm alias default 22
+source ~/.zshrc   # or ~/.bashrc / ~/.config/fish/config.fish
+nvm install 22 && nvm use 22 && nvm alias default 22
 ```
 
-Verify:
+Verify: `node -v` && `npm -v`
 
+#### Step 2 — Install Prerequisites
 ```bash
-node --version   # should print v22.x.x
-npm --version
-```
-
-#### Step 2 — Install Claude Code
-
-```bash
+# Install Claude Code
 npm install -g @anthropic-ai/claude-code
-```
 
-Verify:
-
-```bash
-claude --version
-```
-
-#### Step 3 — Install Antigravity CLI
-
-Follow the [Antigravity installation guide](https://github.com/anthropics/antigravity) for your platform.  
-After installation, verify:
-
-```bash
+# Install Antigravity CLI (acc) — follow your platform guide, then verify:
 acc --version
 ```
 
-#### Step 4 — Install liri
-
-Clone the repository and install globally:
-
+#### Step 3 — Install liri
 ```bash
 git clone https://github.com/lokeshhh-10/liri-code.git
 cd liri-code
@@ -104,74 +77,43 @@ npm run build
 npm install -g .
 ```
 
-> **Note:** If you get an `EACCES` permission error, set a user-level npm prefix first:
+> 💡 **Note on PATH / Permission errors:** If you encounter `EACCES` or `command not found`:
 > ```bash
 > mkdir -p ~/.local/share/npm
 > npm config set prefix ~/.local/share/npm
 > npm install -g .
+> echo 'export PATH="$HOME/.local/share/npm/bin:$PATH"' >> ~/.zshrc  # or ~/.bashrc
+> source ~/.zshrc  # or ~/.bashrc
 > ```
-> Then add to your `~/.zshrc` (or `~/.bashrc`):
-> ```bash
-> export PATH="$HOME/.local/share/npm/bin:$PATH"
-> ```
-> And reload: `source ~/.zshrc`
 
-#### Step 5 — Run
-
-Open a new terminal window and run:
-
+#### Step 4 — Run
 ```bash
 liri
 ```
 
 ---
 
-### Windows
+### 🪟 Windows
 
 #### Step 1 — Install Node.js
-
-**Option A (recommended):** Download and run the official installer from [nodejs.org](https://nodejs.org/en/download). Choose the **LTS** version (22.x).  
-The installer automatically adds Node.js to your PATH.
-
-**Option B:** Use [nvm-windows](https://github.com/coreybutler/nvm-windows):
+Download **Node.js 22 LTS** from [nodejs.org](https://nodejs.org) or use [nvm-windows](https://github.com/coreybutler/nvm-windows):
 
 ```powershell
-# After installing nvm-windows
 nvm install 22
 nvm use 22
 ```
 
-Verify (in a new PowerShell or Command Prompt window):
-
+#### Step 2 — Install Prerequisites
 ```powershell
-node --version
-npm --version
-```
-
-#### Step 2 — Install Claude Code
-
-```powershell
+# Install Claude Code
 npm install -g @anthropic-ai/claude-code
-```
 
-Verify:
-
-```powershell
-claude --version
-```
-
-#### Step 3 — Install Antigravity CLI
-
-Follow the [Antigravity installation guide](https://github.com/anthropics/antigravity) for Windows.  
-After installation, verify:
-
-```powershell
+# Follow Antigravity guide for Windows, then verify:
 acc --version
 ```
 
-#### Step 4 — Install liri
-
-Open **PowerShell** or **Windows Terminal** and run:
+#### Step 3 — Install liri
+In PowerShell or Windows Terminal:
 
 ```powershell
 git clone https://github.com/lokeshhh-10/liri-code.git
@@ -181,121 +123,14 @@ npm run build
 npm install -g .
 ```
 
-On Windows, global npm packages are automatically placed in `%APPDATA%\npm`, which is already in your PATH — no extra configuration needed.
-
-#### Step 5 — Run
-
-Open a **new** PowerShell or Windows Terminal window and run:
-
+#### Step 4 — Run
 ```powershell
 liri
 ```
 
-> **Tip:** For the best experience on Windows, use [Windows Terminal](https://aka.ms/terminal) — it supports full color and interactive keyboard navigation.
-
 ---
 
-### Linux
-
-#### Step 1 — Install Node.js
-
-The recommended way is via [nvm](https://github.com/nvm-sh/nvm):
-
-```bash
-# Install nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-
-# Reload your shell
-source ~/.bashrc   # or ~/.zshrc if using zsh
-
-# Install Node.js 22 (LTS)
-nvm install 22
-nvm use 22
-nvm alias default 22
-```
-
-Verify:
-
-```bash
-node --version   # should print v22.x.x
-npm --version
-```
-
-#### Step 2 — Install Claude Code
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-Verify:
-
-```bash
-claude --version
-```
-
-#### Step 3 — Install Antigravity CLI
-
-Follow the [Antigravity installation guide](https://github.com/anthropics/antigravity) for your distro.  
-After installation, verify:
-
-```bash
-acc --version
-```
-
-#### Step 4 — Install liri
-
-Clone the repo and set up a user-level npm prefix (avoids needing `sudo`):
-
-```bash
-# Clone and enter project directory
-git clone https://github.com/lokeshhh-10/liri-code.git
-cd liri-code
-
-# Install dependencies and build
-npm install
-npm run build
-
-# Set a user-level npm prefix (only needed once)
-mkdir -p ~/.local/share/npm
-npm config set prefix ~/.local/share/npm
-
-# Install globally
-npm install -g .
-```
-
-#### Step 5 — Add liri to your PATH
-
-**For bash users** — add to `~/.bashrc`:
-
-```bash
-echo 'export PATH="$HOME/.local/share/npm/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-**For zsh users** — add to `~/.zshrc`:
-
-```bash
-echo 'export PATH="$HOME/.local/share/npm/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
-```
-
-**For fish users** — add to `~/.config/fish/config.fish`:
-
-```fish
-fish_add_path ~/.local/share/npm/bin
-```
-
-#### Step 6 — Run
-
-Open a new terminal (or reload your shell config) and run:
-
-```bash
-liri
-```
-
----
-
-## Usage
+## 💻 Usage
 
 ```bash
 liri              # Launch with interactive model picker
@@ -304,7 +139,7 @@ liri --help       # Show help
 liri --version    # Show version
 ```
 
-### Navigation
+### ⌨️ Navigation
 
 | Key | Action |
 |---|---|
@@ -312,15 +147,15 @@ liri --version    # Show version
 | `Enter` | Select model and launch Claude Code |
 | `Esc` / `Ctrl+C` | Exit without launching |
 
-### What happens after you pick a model
+### ⚙️ What happens after selecting a model
 
-- `~/.claude/settings.json` is written with all model slots set to your selection
-- Claude Code launches immediately in the same terminal
-- Your last selection is remembered — it's pre-selected next time you run `liri`
+- `~/.claude/settings.json` is updated with your chosen model.
+- Claude Code launches immediately in the same terminal session.
+- Your selection is remembered and automatically pre-selected on your next run.
 
 ---
 
-## Updating
+## 🔄 Updating
 
 ```bash
 cd liri-code
@@ -332,7 +167,7 @@ npm install -g .
 
 ---
 
-## Development
+## 🛠️ Development
 
 ```bash
 npm install          # Install dependencies
@@ -344,41 +179,19 @@ npm run format       # Prettier
 
 ---
 
-## Troubleshooting
+## ❓ Troubleshooting
 
-### `liri: command not found`
+### 🔍 `liri: command not found`
+Add your global npm bin path to your shell configuration (e.g. `~/.zshrc` or `~/.bashrc`), then open a new terminal window.
 
-- Your shell's PATH doesn't include the npm global bin directory.
-- Run `npm config get prefix` to find where global packages are installed.
-- Add `<prefix>/bin` to your PATH (see the OS-specific instructions above).
-- Make sure to open a **new terminal** after editing your shell config.
+### ⚠️ `Proxy not running` / Proxy fails to start
+Ensure `acc` is installed and in your `PATH` (`which acc`). You can also test starting it manually with `acc start`.
 
-### `Proxy not running` / proxy fails to start
-
-- Make sure `acc` is installed and in your PATH: `which acc`
-- Try starting the proxy manually: `acc start`
-- Check if port `8080` is already in use: `lsof -i :8080` (Linux/macOS) or `netstat -ano | findstr :8080` (Windows)
-
-### `Claude Code is not installed`
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-### `EACCES: permission denied` on macOS/Linux
-
-You're trying to write to a system-owned npm prefix. Switch to a user-level prefix:
-
-```bash
-mkdir -p ~/.local/share/npm
-npm config set prefix ~/.local/share/npm
-npm install -g .
-```
-
-Then add `$HOME/.local/share/npm/bin` to your PATH as described above.
+### ❌ `Claude Code is not installed`
+Install it globally via `npm install -g @anthropic-ai/claude-code`.
 
 ---
 
-## License
+## 📄 License
 
 MIT
