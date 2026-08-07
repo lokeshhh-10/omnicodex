@@ -8,13 +8,7 @@ export const CLAUDE_SETTINGS_PATH = path.join(os.homedir(), '.claude', 'settings
 export const LAST_MODEL_PATH = path.join(os.homedir(), '.config', 'liri-code', 'last-model.json');
 
 /** Ordered list of known providers — determines display order in the picker. */
-export const PROVIDER_ORDER: string[] = [
-  'Anthropic',
-  'Google',
-  'OpenAI',
-  'Qwen',
-  'DeepSeek',
-];
+export const PROVIDER_ORDER: string[] = ['Anthropic', 'Google', 'OpenAI', 'Qwen', 'DeepSeek'];
 
 /** Regex patterns used to detect a provider from a model ID. */
 export const PROVIDER_PATTERNS: [provider: string, pattern: RegExp][] = [

@@ -1,12 +1,4 @@
-import {
-  intro,
-  outro,
-  select,
-  spinner,
-  cancel,
-  isCancel,
-  log,
-} from '@clack/prompts';
+import { intro, outro, select, spinner, cancel, isCancel, log } from '@clack/prompts';
 import pc from 'picocolors';
 import { fetchModels, isProxyReachable, groupByProvider } from './models.js';
 import { sortProviders } from './providers.js';

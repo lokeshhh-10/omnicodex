@@ -15,10 +15,10 @@ const ALLOWED_MODEL_IDS = new Set([
   'gemini-3.6-flash-high',
   'gemini-3.6-flash-medium',
   'gemini-3.6-flash-low',
-  'gemini-3-flash-agent',     // description: "Gemini 3.5 Flash (High)"
-  'gemini-3.5-flash-low',     // description: "Gemini 3.5 Flash (Medium)"
+  'gemini-3-flash-agent', // description: "Gemini 3.5 Flash (High)"
+  'gemini-3.5-flash-low', // description: "Gemini 3.5 Flash (Medium)"
   'gemini-3.5-flash-extra-low', // description: "Gemini 3.5 Flash (Low)"
-  'gemini-pro-agent',         // description: "Gemini 3.1 Pro (High)"
+  'gemini-pro-agent', // description: "Gemini 3.1 Pro (High)"
   'gemini-3.1-pro-low',
   'claude-sonnet-4-6',
   'claude-opus-4-6-thinking',

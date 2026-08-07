@@ -14,11 +14,9 @@ const PROXY_POLL_INTERVAL_MS = 500;
 export async function startProxy(): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     const proc = spawn('acc', ['start'], {
-      stdio: 'pipe',
+      stdio: 'ignore',
       detached: true,
     });
-
-    proc.unref(); // Allow the parent process to continue without waiting
 
     proc.on('error', (err: NodeJS.ErrnoException) => {
       if (err.code === 'ENOENT') {
@@ -32,9 +30,11 @@ export async function startProxy(): Promise<void> {
         reject(new Error(`Failed to start proxy: ${err.message}`));
       }
     });
-  }).catch((err) => {
-    // Only reject on ENOENT — if the process spawned fine, continue polling
-    if ((err as Error).message.includes('acc')) throw err;
+
+    proc.on('spawn', () => {
+      proc.unref();
+      resolve();
+    });
   });
 
   // Poll until the proxy responds or timeout

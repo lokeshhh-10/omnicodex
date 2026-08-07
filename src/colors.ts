@@ -6,10 +6,10 @@ import type { ColorFn } from './types.js';
  * Only model text is colored per the UI guidelines.
  */
 const providerColors: Record<string, ColorFn> = {
-  Anthropic: (t) => pc.yellow(t),   // warm orange (closest available in picocolors)
+  Anthropic: (t) => pc.yellow(t), // warm orange (closest available in picocolors)
   Google: (t) => pc.blue(t),
   OpenAI: (t) => pc.green(t),
-  Qwen: (t) => pc.magenta(t),       // purple
+  Qwen: (t) => pc.magenta(t), // purple
   DeepSeek: (t) => pc.cyan(t),
   Unknown: (t) => pc.white(t),
 };
