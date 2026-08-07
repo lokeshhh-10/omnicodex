@@ -1,4 +1,4 @@
-import { intro, outro, select, spinner, cancel, isCancel, log } from '@clack/prompts';
+import { outro, select, spinner, cancel, isCancel, log } from '@clack/prompts';
 import pc from 'picocolors';
 import { fetchModels, isProxyReachable, groupByProvider } from './models.js';
 import { sortProviders } from './providers.js';
@@ -6,6 +6,7 @@ import { colorForProvider, dim } from './colors.js';
 import { writeSettings } from './config.js';
 import { startProxy, launchClaudeCode } from './launcher.js';
 import { readLastModel, writeLastModel } from './utils.js';
+import { printBanner } from './banner.js';
 import type { Model } from './types.js';
 
 /**
@@ -17,7 +18,7 @@ import type { Model } from './types.js';
  *  5. Launch Claude Code
  */
 export async function run(): Promise<void> {
-  intro(pc.bold('  omnicodex  '));
+  printBanner();
 
   // ── 1. Proxy check ──────────────────────────────────────────────────────
   const proxyCheck = spinner();
