@@ -4,12 +4,30 @@ import { formatModelName } from './utils.js';
 import type { Model, GroupedModels } from './types.js';
 
 interface ModelsApiResponse {
-  data: Array<{ id: string }>;
+  data: Array<{ id: string; description?: string }>;
 }
+
+/**
+ * Model IDs to display in the picker.
+ * Only these models will be shown — others returned by the proxy are hidden.
+ */
+const ALLOWED_MODEL_IDS = new Set([
+  'gemini-3.6-flash-high',
+  'gemini-3.6-flash-medium',
+  'gemini-3.6-flash-low',
+  'gemini-3-flash-agent',     // description: "Gemini 3.5 Flash (High)"
+  'gemini-3.5-flash-low',     // description: "Gemini 3.5 Flash (Medium)"
+  'gemini-3.5-flash-extra-low', // description: "Gemini 3.5 Flash (Low)"
+  'gemini-pro-agent',         // description: "Gemini 3.1 Pro (High)"
+  'gemini-3.1-pro-low',
+  'claude-sonnet-4-6',
+  'claude-opus-4-6-thinking',
+]);
 
 /**
  * Fetches the list of available models from the Antigravity proxy.
  * Throws if the proxy is unreachable or returns a non-OK response.
+ * Only returns models present in ALLOWED_MODEL_IDS.
  */
 export async function fetchModels(): Promise<Model[]> {
   const res = await fetch(MODELS_ENDPOINT, { signal: AbortSignal.timeout(5000) });
@@ -20,11 +38,14 @@ export async function fetchModels(): Promise<Model[]> {
 
   const data = (await res.json()) as ModelsApiResponse;
 
-  return data.data.map((m) => ({
-    id: m.id,
-    displayName: formatModelName(m.id),
-    provider: detectProvider(m.id),
-  }));
+  return data.data
+    .filter((m) => ALLOWED_MODEL_IDS.has(m.id))
+    .map((m) => ({
+      id: m.id,
+      // Prefer the proxy's description; fall back to formatting the raw ID
+      displayName: m.description?.trim() || formatModelName(m.id),
+      provider: detectProvider(m.id),
+    }));
 }
 
 /**
