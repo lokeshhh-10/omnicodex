@@ -37,5 +37,13 @@
     "ai",
     "cli",
     "antigravity"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lokeshhh-10/omnicodex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lokeshhh-10/omnicodex/issues"
+  },
+  "homepage": "https://github.com/lokeshhh-10/omnicodex#readme"
 }
