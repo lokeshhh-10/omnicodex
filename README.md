@@ -3,7 +3,14 @@
 A minimal, lightning-fast CLI launcher for [Claude Code](https://github.com/anthropics/claude-code) with interactive model selection via an [Antigravity](https://github.com/anthropics/antigravity) proxy.
 
 ```text
-┌    omnicodex  
+ ░███░ █░░░█ █░░░█ ░███░ ░████ ░███░ ████░ █████ █░░░█
+ █░░░█ ██░██ ██░░█ ░░█░░ █░░░░ █░░░█ █░░░█ █░░░░ ░█░█░
+ █░░░█ █░█░█ █░█░█ ░░█░░ █░░░░ █░░░█ █░░░█ ████░ ░░█░░
+ █░░░█ █░░░█ █░░██ ░░█░░ █░░░░ █░░░█ █░░░█ █░░░░ ░█░█░
+ ░███░ █░░░█ █░░░█ ░███░ ░████ ░███░ ████░ █████ █░░░█
+
+    Claude Code launcher  ·  powered by Antigravity
+
 │
 ◇  Proxy is running
 │
