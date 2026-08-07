@@ -1,10 +1,11 @@
 {
-  "name": "liri-code",
+  "name": "coderift",
   "version": "1.0.0",
   "description": "CLI launcher for Claude Code with interactive model selection via Antigravity Proxy",
   "type": "module",
   "bin": {
-    "liri": "./dist/index.js"
+    "coderift": "./dist/index.js",
+    "rift": "./dist/index.js"
   },
   "files": [
     "dist"

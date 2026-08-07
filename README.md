@@ -1,9 +1,9 @@
-# 🚀 liri-code
+# 🚀 coderift
 
 A minimal, lightning-fast CLI launcher for [Claude Code](https://github.com/anthropics/claude-code) with interactive model selection via an [Antigravity](https://github.com/anthropics/antigravity) proxy.
 
 ```text
-┌    liri  
+┌    coderift  
 │
 ◇  Proxy is running
 │
@@ -21,6 +21,26 @@ A minimal, lightning-fast CLI launcher for [Claude Code](https://github.com/anth
 
 ---
 
+## ⚡ Quick Start
+
+Install globally via **npm**:
+
+```bash
+npm install -g coderift
+```
+
+Then run anywhere:
+
+```bash
+coderift
+# or use the short alias:
+rift
+```
+
+*(Alternatively, run instantly without installing: `npx coderift`)*
+
+---
+
 ## ⚡ How it works
 
 1. 🔄 Checks if the Antigravity proxy is running — **starts it automatically** if not
@@ -33,42 +53,40 @@ A minimal, lightning-fast CLI launcher for [Claude Code](https://github.com/anth
 
 ## 📋 Requirements
 
-Before installing `liri`, make sure these are installed on your system:
+Before installing `coderift`, make sure these are installed on your system:
 
 | Requirement | Version | Purpose |
 |---|---|---|
 | 🟢 [Node.js](https://nodejs.org) | ≥ 18 | JavaScript runtime |
-| 🤖 [Claude Code](https://github.com/anthropics/claude-code) | latest | The CLI tool `liri` launches |
+| 🤖 [Claude Code](https://github.com/anthropics/claude-code) | latest | The CLI tool `coderift` launches |
 | ⚡ [Antigravity CLI](https://github.com/anthropics/antigravity) (`acc`) | latest | Proxy that serves available models |
 
 ---
 
-## 📦 Installation
+## 📦 Detailed Installation & Setup
 
-### 🍎 / 🐧 macOS & Linux
+### 1️⃣ Install Prerequisites
 
-#### Step 1 — Install Node.js
-Using [nvm](https://github.com/nvm-sh/nvm) (recommended):
+Make sure **Claude Code** and **Antigravity CLI (`acc`)** are installed:
 
-```bash
-# Install nvm & Node.js 22 (LTS)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.zshrc   # or ~/.bashrc / ~/.config/fish/config.fish
-nvm install 22 && nvm use 22 && nvm alias default 22
-```
-
-Verify: `node -v` && `npm -v`
-
-#### Step 2 — Install Prerequisites
 ```bash
 # Install Claude Code
 npm install -g @anthropic-ai/claude-code
 
-# Install Antigravity CLI (acc) — follow your platform guide, then verify:
+# Ensure Antigravity CLI is installed and available in PATH
 acc --version
 ```
 
-#### Step 3 — Install liri
+### 2️⃣ Install coderift
+
+#### Option A: Via npm (Recommended)
+
+```bash
+npm install -g coderift
+```
+
+#### Option B: From Source (GitHub)
+
 ```bash
 git clone https://github.com/lokeshhh-10/liri-code.git
 cd liri-code
@@ -77,66 +95,25 @@ npm run build
 npm install -g .
 ```
 
-> 💡 **Note on PATH / Permission errors:** If you encounter `EACCES` or `command not found`:
+> 💡 **Note on PATH / Permission errors (`EACCES`):**
 > ```bash
 > mkdir -p ~/.local/share/npm
 > npm config set prefix ~/.local/share/npm
-> npm install -g .
+> npm install -g coderift
 > echo 'export PATH="$HOME/.local/share/npm/bin:$PATH"' >> ~/.zshrc  # or ~/.bashrc
 > source ~/.zshrc  # or ~/.bashrc
 > ```
-
-#### Step 4 — Run
-```bash
-liri
-```
-
----
-
-### 🪟 Windows
-
-#### Step 1 — Install Node.js
-Download **Node.js 22 LTS** from [nodejs.org](https://nodejs.org) or use [nvm-windows](https://github.com/coreybutler/nvm-windows):
-
-```powershell
-nvm install 22
-nvm use 22
-```
-
-#### Step 2 — Install Prerequisites
-```powershell
-# Install Claude Code
-npm install -g @anthropic-ai/claude-code
-
-# Follow Antigravity guide for Windows, then verify:
-acc --version
-```
-
-#### Step 3 — Install liri
-In PowerShell or Windows Terminal:
-
-```powershell
-git clone https://github.com/lokeshhh-10/liri-code.git
-cd liri-code
-npm install
-npm run build
-npm install -g .
-```
-
-#### Step 4 — Run
-```powershell
-liri
-```
 
 ---
 
 ## 💻 Usage
 
 ```bash
-liri              # Launch with interactive model picker
-liri code         # Same as liri
-liri --help       # Show help
-liri --version    # Show version
+coderift           # Launch with interactive model picker
+rift               # Same as coderift (short alias)
+coderift code      # Same as coderift
+coderift --help    # Show help
+coderift --version # Show version
 ```
 
 ### ⌨️ Navigation
@@ -157,12 +134,17 @@ liri --version    # Show version
 
 ## 🔄 Updating
 
+Via npm:
+
+```bash
+npm install -g coderift@latest
+```
+
+Or from source:
+
 ```bash
 cd liri-code
-git pull
-npm install
-npm run build
-npm install -g .
+git pull && npm install && npm run build && npm install -g .
 ```
 
 ---
@@ -181,7 +163,7 @@ npm run format       # Prettier
 
 ## ❓ Troubleshooting
 
-### 🔍 `liri: command not found`
+### 🔍 `coderift: command not found`
 Add your global npm bin path to your shell configuration (e.g. `~/.zshrc` or `~/.bashrc`), then open a new terminal window.
 
 ### ⚠️ `Proxy not running` / Proxy fails to start

@@ -6,11 +6,12 @@ const command = args[0];
 // ── Help ──────────────────────────────────────────────────────────────────
 if (command === '--help' || command === '-h') {
   console.log(`
-liri — Claude Code launcher
+coderift — Claude Code launcher
 
 Usage:
-  liri              Launch Claude Code with interactive model selection
-  liri code         Same as liri
+  coderift          Launch Claude Code with interactive model selection
+  coderift code     Same as coderift
+  rift              Short alias for coderift
 
 Options:
   -h, --help        Show this help message
@@ -40,6 +41,6 @@ if (!command || command === 'code') {
     process.exit(1);
   }
 } else {
-  console.error(`Unknown command: ${command}\nRun 'liri --help' for usage.`);
+  console.error(`Unknown command: ${command}\nRun 'coderift --help' for usage.`);
   process.exit(1);
 }
