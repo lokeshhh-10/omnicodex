@@ -1,9 +1,9 @@
-# 🚀 coderift
+# 🚀 omnicodex
 
 A minimal, lightning-fast CLI launcher for [Claude Code](https://github.com/anthropics/claude-code) with interactive model selection via an [Antigravity](https://github.com/anthropics/antigravity) proxy.
 
 ```text
-┌    coderift  
+┌    omnicodex  
 │
 ◇  Proxy is running
 │
@@ -26,18 +26,18 @@ A minimal, lightning-fast CLI launcher for [Claude Code](https://github.com/anth
 Install globally via **npm**:
 
 ```bash
-npm install -g coderift
+npm install -g omnicodex
 ```
 
 Then run anywhere:
 
 ```bash
-coderift
+omnicodex
 # or use the short alias:
-rift
+omni
 ```
 
-*(Alternatively, run instantly without installing: `npx coderift`)*
+*(Alternatively, run instantly without installing: `npx omnicodex`)*
 
 ---
 
@@ -53,12 +53,12 @@ rift
 
 ## 📋 Requirements
 
-Before installing `coderift`, make sure these are installed on your system:
+Before installing `omnicodex`, make sure these are installed on your system:
 
 | Requirement | Version | Purpose |
 |---|---|---|
 | 🟢 [Node.js](https://nodejs.org) | ≥ 18 | JavaScript runtime |
-| 🤖 [Claude Code](https://github.com/anthropics/claude-code) | latest | The CLI tool `coderift` launches |
+| 🤖 [Claude Code](https://github.com/anthropics/claude-code) | latest | The CLI tool `omnicodex` launches |
 | ⚡ [Antigravity CLI](https://github.com/anthropics/antigravity) (`acc`) | latest | Proxy that serves available models |
 
 ---
@@ -77,12 +77,12 @@ npm install -g @anthropic-ai/claude-code
 acc --version
 ```
 
-### 2️⃣ Install coderift
+### 2️⃣ Install omnicodex
 
 #### Option A: Via npm (Recommended)
 
 ```bash
-npm install -g coderift
+npm install -g omnicodex
 ```
 
 #### Option B: From Source (GitHub)
@@ -99,7 +99,7 @@ npm install -g .
 > ```bash
 > mkdir -p ~/.local/share/npm
 > npm config set prefix ~/.local/share/npm
-> npm install -g coderift
+> npm install -g omnicodex
 > echo 'export PATH="$HOME/.local/share/npm/bin:$PATH"' >> ~/.zshrc  # or ~/.bashrc
 > source ~/.zshrc  # or ~/.bashrc
 > ```
@@ -109,11 +109,11 @@ npm install -g .
 ## 💻 Usage
 
 ```bash
-coderift           # Launch with interactive model picker
-rift               # Same as coderift (short alias)
-coderift code      # Same as coderift
-coderift --help    # Show help
-coderift --version # Show version
+omnicodex          # Launch with interactive model picker
+omni               # Same as omnicodex (short alias)
+omnicodex code     # Same as omnicodex
+omnicodex --help   # Show help
+omnicodex --version # Show version
 ```
 
 ### ⌨️ Navigation
@@ -137,7 +137,7 @@ coderift --version # Show version
 Via npm:
 
 ```bash
-npm install -g coderift@latest
+npm install -g omnicodex@latest
 ```
 
 Or from source:
@@ -163,7 +163,7 @@ npm run format       # Prettier
 
 ## ❓ Troubleshooting
 
-### 🔍 `coderift: command not found`
+### 🔍 `omnicodex: command not found`
 Add your global npm bin path to your shell configuration (e.g. `~/.zshrc` or `~/.bashrc`), then open a new terminal window.
 
 ### ⚠️ `Proxy not running` / Proxy fails to start

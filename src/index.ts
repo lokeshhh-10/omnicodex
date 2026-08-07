@@ -6,12 +6,12 @@ const command = args[0];
 // ── Help ──────────────────────────────────────────────────────────────────
 if (command === '--help' || command === '-h') {
   console.log(`
-coderift — Claude Code launcher
+omnicodex — Claude Code launcher
 
 Usage:
-  coderift          Launch Claude Code with interactive model selection
-  coderift code     Same as coderift
-  rift              Short alias for coderift
+  omnicodex         Launch Claude Code with interactive model selection
+  omni              Short alias for omnicodex
+  omnicodex code    Same as omnicodex
 
 Options:
   -h, --help        Show this help message
@@ -41,6 +41,6 @@ if (!command || command === 'code') {
     process.exit(1);
   }
 } else {
-  console.error(`Unknown command: ${command}\nRun 'coderift --help' for usage.`);
+  console.error(`Unknown command: ${command}\nRun 'omnicodex --help' for usage.`);
   process.exit(1);
 }

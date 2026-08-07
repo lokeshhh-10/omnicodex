@@ -17,7 +17,7 @@ import type { Model } from './types.js';
  *  5. Launch Claude Code
  */
 export async function run(): Promise<void> {
-  intro(pc.bold('  coderift  '));
+  intro(pc.bold('  omnicodex  '));
 
   // ── 1. Proxy check ──────────────────────────────────────────────────────
   const proxyCheck = spinner();
