@@ -1,0 +1,40 @@
+{
+  "name": "liri-code",
+  "version": "1.0.0",
+  "description": "CLI launcher for Claude Code with interactive model selection via Antigravity Proxy",
+  "type": "module",
+  "bin": {
+    "liri": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src",
+    "format": "prettier --write src",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.4.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "cli",
+    "antigravity"
+  ]
+}
