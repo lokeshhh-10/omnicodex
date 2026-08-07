@@ -88,8 +88,8 @@ npm install -g omnicodex
 #### Option B: From Source (GitHub)
 
 ```bash
-git clone https://github.com/lokeshhh-10/liri-code.git
-cd liri-code
+git clone https://github.com/lokeshhh-10/omnicodex.git
+cd omnicodex
 npm install
 npm run build
 npm install -g .
@@ -143,7 +143,7 @@ npm install -g omnicodex@latest
 Or from source:
 
 ```bash
-cd liri-code
+cd omnicodex
 git pull && npm install && npm run build && npm install -g .
 ```
 
