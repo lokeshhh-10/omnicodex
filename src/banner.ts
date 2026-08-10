@@ -93,10 +93,10 @@ function colorRow(row: number, text: string): string {
     .map((ch) => {
       if (ch === '█') {
         if (row === 2) return pc.bold(pc.white('█'));
-        if (row === 0 || row === 4) return pc.dim(pc.white('█'));
-        return pc.white('█');
+        if (row === 1 || row === 3) return pc.bold(pc.cyan('█'));
+        return pc.cyan('█');
       }
-      if (ch === '░') return pc.dim('\u2591');
+      if (ch === '░') return pc.blue('░');
       return ch;
     })
     .join('');
@@ -109,21 +109,21 @@ function colorRow(row: number, text: string): string {
 export function printBanner(): void {
   const width = process.stdout.columns || 80;
 
-  process.stdout.write('\n');
+  console.log('');
 
   for (let row = 0; row < 5; row++) {
     const raw = renderRow(row);
     const colored = colorRow(row, raw);
     const rawLen = raw.length;
     const padding = Math.max(0, Math.floor((width - rawLen) / 2));
-    process.stdout.write(' '.repeat(padding) + colored + '\n');
+    console.log(' '.repeat(padding) + colored);
   }
 
   const tagline = 'Claude Code launcher  ·  powered by Antigravity';
   const tagPadding = Math.max(0, Math.floor((width - tagline.length) / 2));
-  process.stdout.write('\n');
-  process.stdout.write(' '.repeat(tagPadding) + pc.dim(tagline) + '\n');
-  process.stdout.write('\n');
+  console.log('');
+  console.log(' '.repeat(tagPadding) + pc.cyan('Claude Code launcher') + pc.dim('  ·  ') + pc.magenta('powered by Antigravity'));
+  console.log('');
 }
 
 /**
