@@ -77,6 +77,11 @@ export async function switchModelInteractive(): Promise<void> {
   const ok = await sendSetModel(runtime.port, modelId);
   if (ok) {
     writeLastModel(modelId);
+    try {
+      writeSettings(modelId, runtime.port);
+    } catch {
+      // Non-fatal
+    }
     outro(`Switched active session model to ${pc.bold(chosenModel.displayName)}`);
   } else {
     cancel('Failed to communicate with active omnicodex session.');
@@ -95,6 +100,11 @@ export async function setModelDirect(modelId: string): Promise<void> {
   const ok = await sendSetModel(runtime.port, modelId);
   if (ok) {
     writeLastModel(modelId);
+    try {
+      writeSettings(modelId, runtime.port);
+    } catch {
+      // Non-fatal
+    }
     console.log(pc.green(`✓ Switched active session model to ${pc.bold(modelId)}`));
   } else {
     console.error(pc.red('Failed to communicate with active omnicodex session.'));

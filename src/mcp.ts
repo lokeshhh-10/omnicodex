@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { RUNTIME_STORE_PATH } from './constants.js';
+import { writeSettings } from './config.js';
+import { writeLastModel } from './utils.js';
 
 interface RuntimeStore {
   port: number;
@@ -211,6 +213,12 @@ async function handleRequest(req: {
 
       const ok = await sendSetModel(runtime.port, resolvedId);
       if (ok) {
+        writeLastModel(resolvedId);
+        try {
+          writeSettings(resolvedId, runtime.port);
+        } catch {
+          // Ignore settings update errors
+        }
         sendJson({
           jsonrpc: '2.0',
           id,

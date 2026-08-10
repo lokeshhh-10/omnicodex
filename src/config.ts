@@ -9,9 +9,10 @@ import {
 } from './constants.js';
 
 interface ClaudeSettings {
-  theme: string;
-  env: Record<string, string>;
+  theme?: string;
+  env?: Record<string, string>;
   mcpServers?: Record<string, { command: string; args: string[] }>;
+  [key: string]: any;
 }
 
 /**
@@ -19,29 +20,47 @@ interface ClaudeSettings {
  * Sets ANTHROPIC_BASE_URL to point to the local middleware proxy if proxyPort is specified.
  */
 export function writeSettings(modelId: string, proxyPort?: number): void {
+  let existingSettings: ClaudeSettings = {};
+  try {
+    if (fs.existsSync(CLAUDE_SETTINGS_PATH)) {
+      const raw = fs.readFileSync(CLAUDE_SETTINGS_PATH, 'utf8');
+      existingSettings = JSON.parse(raw);
+    }
+  } catch {
+    existingSettings = {};
+  }
+
   const baseUrl = proxyPort ? `http://localhost:${proxyPort}` : PROXY_BASE_URL;
 
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const mcpServerPath = path.join(__dirname, 'mcp.js');
 
+  const env = {
+    ...(existingSettings.env || {}),
+    ANTHROPIC_AUTH_TOKEN: 'test',
+    ANTHROPIC_BASE_URL: baseUrl,
+    ANTHROPIC_MODEL: modelId,
+    ANTHROPIC_DEFAULT_OPUS_MODEL: DEFAULT_OPUS_MODEL,
+    ANTHROPIC_DEFAULT_SONNET_MODEL: DEFAULT_SONNET_MODEL,
+    ANTHROPIC_DEFAULT_HAIKU_MODEL: modelId,
+    CLAUDE_CODE_SUBAGENT_MODEL: modelId,
+    CLAUDE_CODE_MAX_CONTEXT_TOKENS: '1000000',
+    ENABLE_EXPERIMENTAL_MCP_CLI: 'true',
+  };
+
+  const mcpServers = {
+    ...(existingSettings.mcpServers || {}),
+    omnicodex: {
+      command: 'node',
+      args: [mcpServerPath],
+    },
+  };
+
   const settings: ClaudeSettings = {
     theme: 'dark',
-    env: {
-      ANTHROPIC_AUTH_TOKEN: 'test',
-      ANTHROPIC_BASE_URL: baseUrl,
-      ANTHROPIC_MODEL: modelId,
-      ANTHROPIC_DEFAULT_OPUS_MODEL: DEFAULT_OPUS_MODEL,
-      ANTHROPIC_DEFAULT_SONNET_MODEL: DEFAULT_SONNET_MODEL,
-      ANTHROPIC_DEFAULT_HAIKU_MODEL: modelId,
-      CLAUDE_CODE_SUBAGENT_MODEL: modelId,
-      ENABLE_EXPERIMENTAL_MCP_CLI: 'true',
-    },
-    mcpServers: {
-      omnicodex: {
-        command: 'node',
-        args: [mcpServerPath],
-      },
-    },
+    ...existingSettings,
+    env,
+    mcpServers,
   };
 
   const dir = path.dirname(CLAUDE_SETTINGS_PATH);
