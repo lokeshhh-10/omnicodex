@@ -6,7 +6,6 @@ import {
   PROXY_BASE_URL,
   DEFAULT_OPUS_MODEL,
   DEFAULT_SONNET_MODEL,
-  DEFAULT_HAIKU_MODEL,
 } from './constants.js';
 
 interface ClaudeSettings {
@@ -33,7 +32,7 @@ export function writeSettings(modelId: string, proxyPort?: number): void {
       ANTHROPIC_MODEL: modelId,
       ANTHROPIC_DEFAULT_OPUS_MODEL: DEFAULT_OPUS_MODEL,
       ANTHROPIC_DEFAULT_SONNET_MODEL: DEFAULT_SONNET_MODEL,
-      ANTHROPIC_DEFAULT_HAIKU_MODEL: DEFAULT_HAIKU_MODEL,
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: modelId,
       CLAUDE_CODE_SUBAGENT_MODEL: modelId,
       ENABLE_EXPERIMENTAL_MCP_CLI: 'true',
     },
