@@ -6,6 +6,13 @@ export const MODELS_ENDPOINT = `${PROXY_BASE_URL}/v1/models`;
 
 export const CLAUDE_SETTINGS_PATH = path.join(os.homedir(), '.claude', 'settings.json');
 export const LAST_MODEL_PATH = path.join(os.homedir(), '.config', 'omnicodex', 'last-model.json');
+export const RUNTIME_STORE_PATH = path.join(os.homedir(), '.config', 'omnicodex', 'runtime.json');
+
+/** Default model assignments for Opus, Sonnet, and Haiku slots in settings.json */
+export const DEFAULT_OPUS_MODEL = 'claude-opus-4-6-thinking';
+export const DEFAULT_SONNET_MODEL = 'claude-sonnet-4-6';
+export const DEFAULT_HAIKU_MODEL = 'gemini-3.6-flash-high';
+
 
 /** Ordered list of known providers — determines display order in the picker. */
 export const PROVIDER_ORDER: string[] = ['Anthropic', 'Google', 'OpenAI', 'Qwen', 'DeepSeek'];
@@ -24,3 +31,4 @@ export const ABBREVIATIONS: Record<string, string> = {
   gpt: 'GPT',
   ai: 'AI',
 };
+

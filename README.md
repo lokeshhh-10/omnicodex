@@ -116,12 +116,37 @@ npm install -g .
 ## 💻 Usage
 
 ```bash
-omnicodex          # Launch with interactive model picker
-omni               # Same as omnicodex (short alias)
-omnicodex code     # Same as omnicodex
-omnicodex --help   # Show help
-omnicodex --version # Show version
+omnicodex                 # Launch with interactive model picker
+omni                      # Same as omnicodex (short alias)
+omnicodex switch          # Switch active model mid-session (interactive picker)
+omnicodex set <model-id>  # Switch active model mid-session directly (e.g. gemini-pro-agent)
+omnicodex current         # View currently active model in your running session
+omnicodex --help          # Show help
+omnicodex --version       # Show version
 ```
+
+### 🔄 Mid-Session Model Switching
+
+Want to switch from Sonnet to **Gemini 3.1 Pro** or **Opus** in the middle of a coding session without losing context?
+
+You have **3 seamless options** (no context loss, no restarts):
+
+1. **💬 Directly in Claude Chat (Built-in MCP Tool)**
+   Simply tell Claude Code in the chat:
+   - *"Switch model to Gemini 3.1 Pro"*
+   - *"Use Opus model for the next prompt"*
+   - *"Switch model to Flash High"*
+
+2. **⚡ Native `/model` Command**
+   Type `/model` inside Claude Code and choose:
+   - **Opus** $\rightarrow$ maps to **Gemini 3.1 Pro** (`gemini-pro-agent`)
+   - **Sonnet** $\rightarrow$ maps to **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
+   - **Haiku** $\rightarrow$ maps to **Gemini 3.6 Flash** (`gemini-3.6-flash-high`)
+
+3. **🖥️ Second Terminal / Split Window**
+   Run `omnicodex switch` (or `omnicodex set gemini-pro-agent`) from any terminal.
+
+
 
 ### ⌨️ Navigation
 
