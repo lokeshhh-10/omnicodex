@@ -1,6 +1,6 @@
 import { outro, select, spinner, cancel, isCancel, log } from '@clack/prompts';
 import pc from 'picocolors';
-import { fetchModels, isProxyReachable, groupByProvider } from './models.js';
+import { fetchModels, isProxyReachable, groupByProvider, resolveModelId } from './models.js';
 import { sortProviders } from './providers.js';
 import { colorForProvider, dim } from './colors.js';
 import { writeSettings } from './config.js';
@@ -9,6 +9,11 @@ import { readLastModel, writeLastModel } from './utils.js';
 import { printBanner } from './banner.js';
 import { startMiddlewareProxy, readRuntimeStore } from './proxy.js';
 import type { Model } from './types.js';
+
+export interface RunOptions {
+  model?: string;
+  quiet?: boolean;
+}
 
 /** Helper to change model on running proxy */
 async function sendSetModel(port: number, modelId: string): Promise<boolean> {
@@ -134,17 +139,67 @@ export async function showCurrentModel(): Promise<void> {
   }
 }
 
+/** Handles `omnicodex list` command */
+export async function listModels(): Promise<void> {
+  const fetchSpinner = spinner();
+  fetchSpinner.start('Fetching models');
+
+  let models: Model[];
+  try {
+    models = await fetchModels();
+    fetchSpinner.stop(`${models.length} model${models.length !== 1 ? 's' : ''} available`);
+  } catch (err) {
+    fetchSpinner.stop('Failed to fetch models');
+    console.error(pc.red((err as Error).message));
+    process.exit(1);
+  }
+
+  const groups = groupByProvider(models);
+  const sortedProviders = sortProviders(Object.keys(groups));
+
+  console.log('\n' + pc.bold('Available Models:'));
+  for (const provider of sortedProviders) {
+    console.log(`\n  ${pc.bold(dim(provider))}`);
+    for (const model of groups[provider]!) {
+      const color = colorForProvider(provider);
+      console.log(`    • ${pc.bold(color(model.displayName))} ${dim(`(${model.id})`)}`);
+    }
+  }
+  console.log('');
+}
+
+/** Handles `omnicodex status` command */
+export async function showStatus(): Promise<void> {
+  const runtime = readRuntimeStore();
+  const reachable = await isProxyReachable();
+
+  console.log('\n' + pc.bold('Omnicodex Session Status:'));
+  console.log(`  Upstream Proxy:  ${reachable ? pc.green('● Reachable (acc start)') : pc.red('○ Offline')}`);
+
+  if (runtime) {
+    console.log(`  Active Session:  ${pc.green('● Running')}`);
+    console.log(`  Proxy Port:      ${pc.cyan(runtime.port.toString())}`);
+    console.log(`  Process PID:     ${pc.dim(runtime.pid.toString())}`);
+    console.log(`  Active Model:    ${pc.bold(pc.cyan(runtime.activeModel))}`);
+  } else {
+    console.log(`  Active Session:  ${pc.yellow('○ No active session')}`);
+  }
+  console.log('');
+}
+
 /**
  * Main CLI orchestration:
  *  1. Check proxy — start it if not running
  *  2. Fetch and group models
- *  3. Show interactive model picker (pre-selecting last used model)
+ *  3. Select starting model (interactive picker or direct flag -m)
  *  4. Start middleware proxy
  *  5. Write ~/.claude/settings.json
  *  6. Launch Claude Code
  */
-export async function run(): Promise<void> {
-  printBanner();
+export async function run(options: RunOptions = {}): Promise<void> {
+  if (!options.quiet && process.env.OMNICODEX_NO_BANNER !== '1') {
+    printBanner();
+  }
 
   // ── 1. Proxy check ──────────────────────────────────────────────────────
   const proxyCheck = spinner();
@@ -189,45 +244,61 @@ export async function run(): Promise<void> {
     process.exit(1);
   }
 
-  // ── 3. Build picker options ──────────────────────────────────────────────
-  const groups = groupByProvider(models);
-  const sortedProviders = sortProviders(Object.keys(groups));
+  // ── 3. Select starting model ──────────────────────────────────────────────
+  let modelId: string;
+  let chosenModel: Model;
 
-  const options: Array<{ value: string; label: string; hint: string }> = [];
-  for (const provider of sortedProviders) {
-    for (const model of groups[provider]!) {
-      options.push({
-        value: model.id,
-        label: colorForProvider(provider)(model.displayName),
-        hint: dim(provider),
-      });
+  if (options.model) {
+    const resolved = resolveModelId(options.model);
+    const matched = resolved ? models.find((m) => m.id === resolved) : undefined;
+
+    if (!matched) {
+      console.error(pc.red(`\nError: Invalid model '${options.model}'.`));
+      console.log(`Available models: ${models.map((m) => m.id).join(', ')}\n`);
+      process.exit(1);
     }
+
+    modelId = matched.id;
+    chosenModel = matched;
+  } else {
+    const groups = groupByProvider(models);
+    const sortedProviders = sortProviders(Object.keys(groups));
+
+    const pickerOptions: Array<{ value: string; label: string; hint: string }> = [];
+    for (const provider of sortedProviders) {
+      for (const model of groups[provider]!) {
+        pickerOptions.push({
+          value: model.id,
+          label: colorForProvider(provider)(model.displayName),
+          hint: dim(provider),
+        });
+      }
+    }
+
+    // Determine initial selection
+    const lastModel = readLastModel();
+    const initialValue =
+      lastModel && pickerOptions.some((o) => o.value === lastModel) ? lastModel : pickerOptions[0]!.value;
+
+    const selected = await select({
+      message: 'Choose a starting model',
+      options: pickerOptions,
+      initialValue,
+    });
+
+    if (isCancel(selected)) {
+      cancel('Cancelled');
+      process.exit(0);
+    }
+
+    modelId = selected as string;
+    chosenModel = models.find((m) => m.id === modelId)!;
   }
 
-  // Determine initial selection
-  const lastModel = readLastModel();
-  const initialValue =
-    lastModel && options.some((o) => o.value === lastModel) ? lastModel : options[0]!.value;
-
-  // ── 4. Show picker ───────────────────────────────────────────────────────
-  const selected = await select({
-    message: 'Choose a starting model',
-    options,
-    initialValue,
-  });
-
-  if (isCancel(selected)) {
-    cancel('Cancelled');
-    process.exit(0);
-  }
-
-  const modelId = selected as string;
-  const chosenModel = models.find((m) => m.id === modelId)!;
-
-  // ── 5. Persist selection ─────────────────────────────────────────────────
+  // ── 4. Persist selection ─────────────────────────────────────────────────
   writeLastModel(modelId);
 
-  // ── 6. Start Middleware Proxy ───────────────────────────────────────────
+  // ── 5. Start Middleware Proxy ───────────────────────────────────────────
   let proxyPort = 8085;
   try {
     proxyPort = await startMiddlewareProxy(modelId);
@@ -235,7 +306,7 @@ export async function run(): Promise<void> {
     log.warn(`Could not start middleware proxy: ${(err as Error).message}`);
   }
 
-  // ── 7. Write settings ────────────────────────────────────────────────────
+  // ── 6. Write settings ────────────────────────────────────────────────────
   try {
     writeSettings(modelId, proxyPort);
   } catch (err) {
@@ -244,6 +315,6 @@ export async function run(): Promise<void> {
 
   outro(`Launching Claude Code with ${pc.bold(chosenModel.displayName)}`);
 
-  // ── 8. Launch Claude Code ────────────────────────────────────────────────
+  // ── 7. Launch Claude Code ────────────────────────────────────────────────
   launchClaudeCode();
 }

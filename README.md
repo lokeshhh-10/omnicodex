@@ -118,12 +118,24 @@ npm install -g .
 ```bash
 omnicodex                 # Launch with interactive model picker
 omni                      # Same as omnicodex (short alias)
+omnicodex -m <model-id>   # Launch directly with specified model (e.g. gemini-pro-agent, opus, flash)
 omnicodex switch          # Switch active model mid-session (interactive picker)
 omnicodex set <model-id>  # Switch active model mid-session directly (e.g. gemini-pro-agent)
 omnicodex current         # View currently active model in your running session
+omnicodex list            # List all available models and their providers
+omnicodex status          # Show proxy reachability and active session details
 omnicodex --help          # Show help
 omnicodex --version       # Show version
 ```
+
+### 🎛️ CLI Options
+
+| Flag | Short | Description |
+|---|---|---|
+| `--model <id>` | `-m` | Direct model launch (bypasses interactive picker) |
+| `--quiet` | `-q` | Suppress ASCII art banner |
+| `--help` | `-h` | Display usage and help menu |
+| `--version` | `-v` | Print omnicodex version number |
 
 ### 🔄 Mid-Session Model Switching
 
@@ -187,6 +199,7 @@ git pull && npm install && npm run build && npm install -g .
 npm install          # Install dependencies
 npm run build        # Build dist/ from src/
 npm run dev          # Watch mode (rebuilds on save)
+npm run test         # Run Vitest unit test suite
 npm run lint         # ESLint
 npm run format       # Prettier
 ```

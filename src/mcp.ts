@@ -1,49 +1,14 @@
 import fs from 'node:fs';
-import path from 'node:path';
 import { RUNTIME_STORE_PATH } from './constants.js';
 import { writeSettings } from './config.js';
 import { writeLastModel } from './utils.js';
+import { fetchModels, readCachedModels, resolveModelId } from './models.js';
+import type { Model } from './types.js';
 
 interface RuntimeStore {
   port: number;
   pid: number;
   activeModel: string;
-}
-
-const ALLOWED_MODELS: Record<string, string> = {
-  'gemini-3.6-flash-high': 'Gemini 3.6 Flash (High)',
-  'gemini-3.6-flash-medium': 'Gemini 3.6 Flash (Medium)',
-  'gemini-3.6-flash-low': 'Gemini 3.6 Flash (Low)',
-  'gemini-3-flash-agent': 'Gemini 3.5 Flash (High)',
-  'gemini-3.5-flash-low': 'Gemini 3.5 Flash (Medium)',
-  'gemini-3.5-flash-extra-low': 'Gemini 3.5 Flash (Low)',
-  'gemini-pro-agent': 'Gemini 3.1 Pro (High)',
-  'gemini-3.1-pro-low': 'Gemini 3.1 Pro (Low)',
-  'claude-sonnet-4-6': 'Claude Sonnet 4.6',
-  'claude-opus-4-6-thinking': 'Claude Opus 4.6 Thinking',
-};
-
-function resolveModelId(query: string): string | null {
-  const q = query.trim().toLowerCase();
-  if (ALLOWED_MODELS[q]) return q;
-
-  // Aliases / Fuzzy matches
-  if (q.includes('3.1 pro') || q.includes('gemini pro') || q === 'pro') return 'gemini-pro-agent';
-  if (q.includes('opus')) return 'claude-opus-4-6-thinking';
-  if (q.includes('sonnet')) return 'claude-sonnet-4-6-thinking';
-  if (q.includes('flash high') || q === 'flash') return 'gemini-3.6-flash-high';
-  if (q.includes('flash medium')) return 'gemini-3.6-flash-medium';
-  if (q.includes('flash low')) return 'gemini-3.6-flash-low';
-  if (q.includes('3.5 flash') || q.includes('flash agent')) return 'gemini-3-flash-agent';
-
-  // Match key substring
-  for (const id of Object.keys(ALLOWED_MODELS)) {
-    if (id.includes(q) || ALLOWED_MODELS[id]!.toLowerCase().includes(q)) {
-      return id;
-    }
-  }
-
-  return null;
 }
 
 function readRuntimeStore(): RuntimeStore | null {
@@ -52,6 +17,14 @@ function readRuntimeStore(): RuntimeStore | null {
     return JSON.parse(raw) as RuntimeStore;
   } catch {
     return null;
+  }
+}
+
+async function getAvailableModels(): Promise<Model[]> {
+  try {
+    return await fetchModels();
+  } catch {
+    return readCachedModels() ?? [];
   }
 }
 
@@ -90,8 +63,7 @@ process.stdin.on('data', (chunk: string) => {
         method: string;
         params?: any;
       };
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      handleRequest(req);
+      void handleRequest(req);
     } catch {
       // Ignore invalid JSON lines
     }
@@ -113,7 +85,7 @@ async function handleRequest(req: {
       result: {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'omnicodex-mcp', version: '1.0.0' },
+        serverInfo: { name: 'omnicodex-mcp', version: '1.1.0' },
       },
     });
     return;
@@ -132,20 +104,19 @@ async function handleRequest(req: {
           {
             name: 'switch_model',
             description:
-              'ALWAYS call this tool when the user requests to change or switch the LLM model mid-session (e.g. "switch to gemini 3.1 pro", "use opus", "switch to flash medium"). This switches the underlying LLM model for the entire current context window. Available models: gemini-pro-agent (Gemini 3.1 Pro High), gemini-3.1-pro-low (Gemini 3.1 Pro Low), gemini-3.6-flash-high, gemini-3.6-flash-medium, gemini-3.6-flash-low, gemini-3-flash-agent (Gemini 3.5 Flash High), gemini-3.5-flash-low, gemini-3.5-flash-extra-low, claude-opus-4-6-thinking, claude-sonnet-4-6.',
+              'ALWAYS call this tool when the user requests to change or switch the LLM model mid-session (e.g. "switch to gemini 3.1 pro", "use opus", "switch to flash medium"). This switches the underlying LLM model for the entire current context window.',
             inputSchema: {
               type: 'object',
               properties: {
                 model: {
                   type: 'string',
                   description:
-                    'Model ID or name to switch to (e.g., "gemini-pro-agent", "gemini 3.1 pro", "gemini 3.5 flash low", "opus", "sonnet", "flash")',
+                    'Model ID, name, or alias to switch to (e.g., "gemini-pro-agent", "gemini 3.1 pro", "opus", "sonnet", "flash")',
                 },
               },
               required: ['model'],
             },
           },
-
           {
             name: 'get_current_model',
             description: 'Get the currently active model ID for the omnicodex session.',
@@ -156,7 +127,7 @@ async function handleRequest(req: {
           },
           {
             name: 'list_available_models',
-            description: 'List all available models that can be switched to mid-session.',
+            description: 'List all available models dynamically fetched from the Antigravity proxy.',
             inputSchema: {
               type: 'object',
               properties: {},
@@ -174,9 +145,11 @@ async function handleRequest(req: {
 
     if (toolName === 'switch_model') {
       const rawQuery = String(args.model || '');
-      const resolvedId = resolveModelId(rawQuery);
+      const models = await getAvailableModels();
+      const resolvedId = resolveModelId(rawQuery, models);
 
       if (!resolvedId) {
+        const availableIds = models.map((m) => m.id).join(', ');
         sendJson({
           jsonrpc: '2.0',
           id,
@@ -184,7 +157,7 @@ async function handleRequest(req: {
             content: [
               {
                 type: 'text',
-                text: `Could not match model '${rawQuery}'. Available models: ${Object.keys(ALLOWED_MODELS).join(', ')}`,
+                text: `Could not match model '${rawQuery}'. Available models: ${availableIds || 'None available'}`,
               },
             ],
             isError: true,
@@ -192,6 +165,9 @@ async function handleRequest(req: {
         });
         return;
       }
+
+      const matchedModel = models.find((m) => m.id === resolvedId);
+      const displayName = matchedModel ? matchedModel.displayName : resolvedId;
 
       const runtime = readRuntimeStore();
       if (!runtime) {
@@ -226,7 +202,7 @@ async function handleRequest(req: {
             content: [
               {
                 type: 'text',
-                text: `Successfully switched active model to ${resolvedId} (${ALLOWED_MODELS[resolvedId]}). All subsequent prompts in this session will use this model.`,
+                text: `Successfully switched active model to ${resolvedId} (${displayName}). All subsequent prompts in this session will use this model.`,
               },
             ],
           },
@@ -267,9 +243,11 @@ async function handleRequest(req: {
     }
 
     if (toolName === 'list_available_models') {
-      const formatted = Object.entries(ALLOWED_MODELS)
-        .map(([id, name]) => `- ${id} (${name})`)
-        .join('\n');
+      const models = await getAvailableModels();
+      const formatted = models.length > 0
+        ? models.map((m) => `- ${m.id} (${m.displayName}) [${m.provider}]`).join('\n')
+        : 'No models currently available from Antigravity proxy.';
+
       sendJson({
         jsonrpc: '2.0',
         id,

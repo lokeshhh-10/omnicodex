@@ -65,7 +65,7 @@ export function cleanupRuntimeStore(): void {
  */
 export function startMiddlewareProxy(initialModel: string, upstreamPort = 8080): Promise<number> {
   activeModel = initialModel;
-  isExplicitlySet = false;
+  isExplicitlySet = true;
   lastRawModelFromClaude = null;
 
   return new Promise((resolve, reject) => {
@@ -123,7 +123,8 @@ export function startMiddlewareProxy(initialModel: string, upstreamPort = 8080):
                 isExplicitlySet = false;
                 lastRawModelFromClaude = incomingModel;
               } else if (isExplicitlySet) {
-                // External CLI (omnicodex switch / set) takes precedence
+                // External CLI (omnicodex switch / set or start) takes precedence
+                lastRawModelFromClaude = incomingModel;
                 json.model = activeModel;
                 bodyBuffer = Buffer.from(JSON.stringify(json), 'utf8');
               } else {

@@ -7,27 +7,42 @@ export const MODELS_ENDPOINT = `${PROXY_BASE_URL}/v1/models`;
 export const CLAUDE_SETTINGS_PATH = path.join(os.homedir(), '.claude', 'settings.json');
 export const LAST_MODEL_PATH = path.join(os.homedir(), '.config', 'omnicodex', 'last-model.json');
 export const RUNTIME_STORE_PATH = path.join(os.homedir(), '.config', 'omnicodex', 'runtime.json');
+export const MODELS_CACHE_PATH = path.join(os.homedir(), '.config', 'omnicodex', 'models-cache.json');
 
 /** Default model assignments for Opus and Sonnet slots in settings.json */
 export const DEFAULT_OPUS_MODEL = 'claude-opus-4-6-thinking';
 export const DEFAULT_SONNET_MODEL = 'claude-sonnet-4-6';
 
-
 /** Ordered list of known providers — determines display order in the picker. */
-export const PROVIDER_ORDER: string[] = ['Anthropic', 'Google', 'OpenAI', 'Qwen', 'DeepSeek'];
+export const PROVIDER_ORDER: string[] = [
+  'Anthropic',
+  'Google',
+  'OpenAI',
+  'Meta',
+  'Mistral',
+  'DeepSeek',
+  'Qwen',
+  'xAI',
+  'Cohere',
+];
 
 /** Regex patterns used to detect a provider from a model ID. */
 export const PROVIDER_PATTERNS: [provider: string, pattern: RegExp][] = [
   ['Anthropic', /^claude-/i],
   ['Google', /^gemini-/i],
   ['OpenAI', /^gpt-/i],
+  ['Meta', /^llama-/i],
+  ['Mistral', /^mistral-/i],
   ['Qwen', /^qwen-/i],
   ['DeepSeek', /^deepseek-/i],
+  ['xAI', /^grok-/i],
+  ['Cohere', /^command-/i],
 ];
 
-/** Words that should always be uppercased when formatting model names. */
+/** Words that should always be formatted in a specific casing when formatting model names. */
 export const ABBREVIATIONS: Record<string, string> = {
   gpt: 'GPT',
   ai: 'AI',
+  deepseek: 'DeepSeek',
 };
 

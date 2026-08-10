@@ -1,19 +1,25 @@
 import { PROVIDER_PATTERNS, PROVIDER_ORDER } from './constants.js';
 
 /**
- * Detects the provider for a given model ID using prefix patterns.
- * Returns 'Unknown' for unrecognised IDs.
+ * Detects the provider for a given model ID using prefix patterns and smart fallback.
  */
 export function detectProvider(modelId: string): string {
   for (const [provider, pattern] of PROVIDER_PATTERNS) {
     if (pattern.test(modelId)) return provider;
   }
+
+  // Smart fallback: use the first segment of the model ID if hyphenated
+  const firstSegment = modelId.split('-')[0];
+  if (firstSegment && firstSegment.length > 1 && !/^\d+$/.test(firstSegment)) {
+    return firstSegment.charAt(0).toUpperCase() + firstSegment.slice(1);
+  }
+
   return 'Unknown';
 }
 
 /**
  * Sorts provider names using the canonical PROVIDER_ORDER list.
- * Unknown providers are sorted alphabetically after the known ones.
+ * Unknown / dynamic providers are sorted alphabetically after the known ones.
  */
 export function sortProviders(providers: string[]): string[] {
   return [...providers].sort((a, b) => {

@@ -56,35 +56,30 @@ export function writeSettings(modelId: string, proxyPort?: number): void {
     },
   };
 
+  const existingPermissions = existingSettings.permissions || {};
+  const existingAllow: string[] = Array.isArray(existingPermissions.allow) ? existingPermissions.allow : [];
+
+  const omniPermissions = [
+    'mcp__omnicodex__switch_model',
+    'mcp__omnicodex__get_current_model',
+    'mcp__omnicodex__list_available_models',
+    'mcp__omnicodex__*',
+  ];
+
+  const allow = Array.from(new Set([...existingAllow, ...omniPermissions]));
+
   const settings: ClaudeSettings = {
     theme: 'dark',
     ...existingSettings,
     env,
     mcpServers,
+    permissions: {
+      ...existingPermissions,
+      allow,
+    },
   };
 
   const dir = path.dirname(CLAUDE_SETTINGS_PATH);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(CLAUDE_SETTINGS_PATH, JSON.stringify(settings, null, 2), 'utf8');
-
-  // Also write .mcp.json in current working directory so Claude Code registers the omnicodex MCP server
-  try {
-    const localMcpPath = path.join(process.cwd(), '.mcp.json');
-    let localMcp: { mcpServers?: Record<string, { command: string; args: string[] }> } = {};
-    if (fs.existsSync(localMcpPath)) {
-      try {
-        localMcp = JSON.parse(fs.readFileSync(localMcpPath, 'utf8'));
-      } catch {
-        localMcp = {};
-      }
-    }
-    if (!localMcp.mcpServers) localMcp.mcpServers = {};
-    localMcp.mcpServers.omnicodex = {
-      command: 'node',
-      args: [mcpServerPath],
-    };
-    fs.writeFileSync(localMcpPath, JSON.stringify(localMcp, null, 2), 'utf8');
-  } catch {
-    // Non-fatal
-  }
 }
