@@ -12,33 +12,51 @@ const PROXY_POLL_INTERVAL_MS = 500;
  * Throws if `acc` is not found or the proxy never becomes reachable.
  */
 export async function startProxy(): Promise<void> {
-  await new Promise<void>((resolve, reject) => {
-    const proc = spawn('acc', ['start'], {
-      stdio: 'ignore',
-      detached: true,
-    });
+  // If proxy is already active and reachable, no action needed
+  if (await isProxyReachable()) return;
 
-    proc.on('error', (err: NodeJS.ErrnoException) => {
-      if (err.code === 'ENOENT') {
-        reject(
-          new Error(
-            'Antigravity CLI (acc) is not installed or not in PATH.\n' +
-              'Install it and try again.',
-          ),
-        );
-      } else {
-        reject(new Error(`Failed to start proxy: ${err.message}`));
-      }
-    });
+  const runAccCommand = (cmd: 'start' | 'restart'): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      const proc = spawn('acc', [cmd], {
+        stdio: 'ignore',
+        detached: true,
+      });
 
-    proc.on('spawn', () => {
-      proc.unref();
-      resolve();
-    });
-  });
+      proc.on('error', (err: NodeJS.ErrnoException) => {
+        if (err.code === 'ENOENT') {
+          reject(
+            new Error(
+              'Antigravity CLI (acc) is not installed or not in PATH.\n' +
+                'Install it and try again.',
+            ),
+          );
+        } else {
+          reject(new Error(`Failed to start proxy: ${err.message}`));
+        }
+      });
 
-  // Poll until the proxy responds or timeout
-  const deadline = Date.now() + PROXY_STARTUP_TIMEOUT_MS;
+      proc.on('spawn', () => {
+        proc.unref();
+        resolve();
+      });
+    });
+  };
+
+  // 1. Attempt standard start
+  await runAccCommand('start');
+
+  // Poll for up to 5 seconds
+  let deadline = Date.now() + 5_000;
+  while (Date.now() < deadline) {
+    if (await isProxyReachable()) return;
+    await sleep(PROXY_POLL_INTERVAL_MS);
+  }
+
+  // 2. Fallback to `acc restart` in case acc hit a stale PID/state file
+  await runAccCommand('restart');
+
+  // Poll for remaining timeout (10 seconds)
+  deadline = Date.now() + 10_000;
   while (Date.now() < deadline) {
     if (await isProxyReachable()) return;
     await sleep(PROXY_POLL_INTERVAL_MS);
