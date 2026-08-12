@@ -27,7 +27,7 @@ A minimal, lightning-fast CLI launcher and MCP middleware for **[Claude Code](ht
 │  ○ Gemini 3.6 Flash (Medium)         Google
 │  ○ Gemini 3.6 Flash (Low)            Google
 │  ○ Gemini 3.1 Pro (High)             Google
-│  ○ GPT-4o                             OpenAI
+│  ○ GPT-4o                            OpenAI
 └
 ```
 
