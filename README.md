@@ -1,4 +1,4 @@
-# 🚀 OmniCodex
+# Omnicodex
 
 [![npm version](https://img.shields.io/npm/v/omnicodex.svg?color=cb3837)](https://www.npmjs.com/package/omnicodex)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -33,7 +33,7 @@ A minimal, lightning-fast CLI launcher and MCP middleware for **[Claude Code](ht
 
 ---
 
-## 🔥 Key Features
+## Key Features
 
 - 🎯 **Interactive Model Selection**: Select from available Google, Anthropic, and OpenAI models with color-coded provider previews.
 - ⚡ **Auto Proxy Initialization**: Automatically checks and starts the Antigravity proxy (`acc start`) if not running.
@@ -43,7 +43,7 @@ A minimal, lightning-fast CLI launcher and MCP middleware for **[Claude Code](ht
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 Install globally via **npm**:
 
@@ -63,17 +63,17 @@ omni
 
 ---
 
-## 📋 Requirements
+## Requirements
 
 | Requirement | Version | Purpose |
 |---|---|---|
 | 🟢 [Node.js](https://nodejs.org) | ≥ 18 | JavaScript runtime |
 | 🤖 [Claude Code](https://github.com/anthropics/claude-code) | latest | CLI tool launched by `omnicodex` |
-| ⚡ [Antigravity CLI](https://github.com/anthropics/antigravity) (`acc`) | latest | Local proxy providing LLM endpoints |
+| ⚡ [Antigravity Claude Proxy](https://github.com/badrisnarayanan/antigravity-claude-proxy) (`acc`) | latest | Local proxy providing LLM endpoints |
 
 ---
 
-## 💻 Usage & Commands
+## Usage & Commands
 
 ### Interactive Launch & Quick Flags
 
@@ -98,24 +98,24 @@ omnicodex --version       # Display version
 
 ---
 
-## 🔄 Mid-Session Model Switching (Zero Context Loss)
+## Mid-Session Model Switching (Zero Context Loss)
 
 Need to switch from Sonnet to **Gemini 3.1 Pro** or **Claude Opus** mid-session? You can change models instantly without losing conversation state:
 
-### Option 1: 💬 Direct Natural Language in Claude Chat (MCP)
+### Option 1: Direct Natural Language in Claude Chat (MCP)
 Thanks to the auto-configured MCP server, you can tell Claude Code directly:
 - *"Switch model to Gemini 3.1 Pro"*
 - *"Use Opus model for this task"*
 - *"Switch model to Flash High"*
 - *"What model am I currently using?"*
 
-### Option 2: ⚡ Native `/model` Command
+### Option 2: Native `/model` Command
 Inside Claude Code chat, type `/model`:
 - **Opus** $\rightarrow$ maps to **Gemini 3.1 Pro** (`gemini-pro-agent`)
 - **Sonnet** $\rightarrow$ maps to **Claude Sonnet 4.6** (`claude-sonnet-4-6`)
 - **Haiku** $\rightarrow$ maps to **Gemini 3.6 Flash** (`gemini-3.6-flash-high`)
 
-### Option 3: 🖥️ Second Terminal
+### Option 3: Second Terminal
 Run from any terminal window:
 ```bash
 omnicodex switch
@@ -127,16 +127,16 @@ omnicodex set gemini-pro-agent
 
 ## ⚙️ How It Works Behind The Scenes
 
-1. 🔄 **Proxy Check**: Verifies if the Antigravity proxy is active on port `8080` (starts `acc start` automatically if offline).
-2. 📡 **Model Discovery**: Queries `http://localhost:8080/v1/models` for available provider models.
-3. 🎯 **Interactive Selection**: Presents a terminal picker powered by `@clack/prompts`.
-4. ⚙️ **MCP & Settings Injection**: Updates `~/.claude/settings.json` with middleware port, token variables, MCP server declaration, and pre-approved tool permissions.
-5. 🔀 **Middleware Server**: Spawns a lightweight local HTTP middleware that dynamically rewrites model requests to the active LLM.
-6. 🚀 **Launcher**: Executes Claude Code CLI seamlessly attached to your active terminal.
+1. **Proxy Check**: Verifies if the Antigravity proxy is active on port `8080` (starts `acc start` automatically if offline).
+2. **Model Discovery**: Queries `http://localhost:8080/v1/models` for available provider models.
+3. **Interactive Selection**: Presents a terminal picker powered by `@clack/prompts`.
+4. **MCP & Settings Injection**: Updates `~/.claude/settings.json` with middleware port, token variables, MCP server declaration, and pre-approved tool permissions.
+5. **Middleware Server**: Spawns a lightweight local HTTP middleware that dynamically rewrites model requests to the active LLM.
+6. **Launcher**: Executes Claude Code CLI seamlessly attached to your active terminal.
 
 ---
 
-## ⌨️ Interactive Navigation
+## Interactive Navigation
 
 | Key | Action |
 |---|---|
@@ -146,7 +146,7 @@ omnicodex set gemini-pro-agent
 
 ---
 
-## 🛠️ Development & Building
+## Development & Building
 
 ```bash
 git clone https://github.com/lokeshhh-10/omnicodex.git
@@ -161,7 +161,7 @@ npm run lint         # Check formatting and linting
 
 ---
 
-## ❓ Troubleshooting
+## Troubleshooting
 
 - **`omnicodex: command not found`**  
   Ensure global npm binaries are in your system `PATH`:
@@ -175,6 +175,6 @@ npm run lint         # Check formatting and linting
 
 ---
 
-## 📄 License
+## License
 
 [MIT](LICENSE)
