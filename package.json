@@ -43,10 +43,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lokeshhh-10/omnicodex.git"
+    "url": "git+https://github.com/lokeshhh-10/Omnicodex.git"
   },
   "bugs": {
-    "url": "https://github.com/lokeshhh-10/omnicodex/issues"
+    "url": "https://github.com/lokeshhh-10/Omnicodex/issues"
   },
-  "homepage": "https://github.com/lokeshhh-10/omnicodex#readme"
+  "homepage": "https://github.com/lokeshhh-10/Omnicodex#readme"
 }
