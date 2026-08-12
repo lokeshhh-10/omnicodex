@@ -14,6 +14,21 @@ A minimal, lightning-fast CLI launcher and MCP middleware for **[Claude Code](ht
  ░███░ █░░░█ █░░░█ ░███░ ░████ ░███░ ████░ █████ █░░░█
 
     Claude Code launcher  ·  powered by Antigravity
+
+│
+◇  Proxy is running
+│
+◇  10 models available
+│
+◆  Choose a starting model
+│  ○ Claude Opus 4.6 (Thinking)        Anthropic
+│  ○ Claude Sonnet 4.6 (Thinking)      Anthropic
+│  ● Gemini 3.6 Flash (High)           Google
+│  ○ Gemini 3.6 Flash (Medium)         Google
+│  ○ Gemini 3.6 Flash (Low)            Google
+│  ○ Gemini 3.1 Pro (High)             Google
+│  ○ GPT-4o                             OpenAI
+└
 ```
 
 ---
